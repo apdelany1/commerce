@@ -1,0 +1,77 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if user == listing.owner and listing.active == False %}
+    <h1 class="text-white">CONGRATS {{ highestBidder.user }} YOU WIN with a bid of ${{ highestBidder.amount }} </h1>
+    {% endif %}
+    <h2 class="text-white">{{ listing.title }}</h2>
+    <p class="text-white">{{ listing.description }}</p>
+    <img src="{{ listing.photo }}" style="height: 250px;">
+    {% if highestBidder%}
+    <h1 class="text-white">${{ highestBidder.amount }} </h1>
+    {% else %}
+    <h1 class="text-white">${{ listing.price }}</h1>
+    {% endif %}
+    <hr>
+
+    {% if user.is_authenticated %}
+        {% if listing.active %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="number" name="bid" step="0.01" placeholder="Enter your bid" class="form-control">
+                <button type="submit" name="addBid" class="btn btn-warning">Place Bid</button>
+            </form>
+            {% if error %}
+                <p class="text-danger mt-2">{{ error }}</p>
+            {% endif %}
+        {% endif %}
+        <hr style="border: 2px solid rgb(1, 3, 95);">
+
+        <br>
+        
+        <form method="post" class="d-flex">
+            {% csrf_token %}
+            {% if not watching %}
+                <button type="submit" name="addWatchlist" class="btn btn-light mb-1">Add to Watchlist</button>
+            {% else %}
+                <button type="submit" name="removeWatchList" class="btn btn-light">Remove From Watchlist</button>
+            {% endif %}
+        </form>
+        <br>
+        {% if user == listing.owner and listing.active %}
+            <form method="post" class="d-flex">
+                {% csrf_token %}
+                <button type="submit" name="closeListing" class="btn btn-light">
+                    Close Auction
+                </button>
+            </form>
+        {% endif %}
+        <br>
+        <hr style="border: 2px solid rgb(0, 0, 0);">
+        <h4 class="mt-4 text-light">Comments</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea class="form-control" name="comment" placeholder="Add a comment..."></textarea>
+            </div>
+            <button type="submit" name="addComment" class="btn btn-light">
+                Post Comment
+            </button>
+        </form>
+        <hr>
+        {% for comment in allComments %}
+
+            <div class="d-flex alert-success">
+                <div>
+                    <h6>{{ comment.owner }} says this:  </h6>
+                </div>
+                <div>
+                    <p class="ml-2">  {{ comment.content }}</p>
+                </div>
+            </div>
+            <hr style="border: 1px dotted white;">
+        {% endfor %}
+    {% else %}
+            <h4>log in to start bidding</h4>
+    {% endif %}
+{% endblock %}

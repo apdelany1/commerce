@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1 class="text-light">For sale in {{ categoryName }}</h1>
+
+    <ul>
+    {% for category in categoryItems %}
+    {% if category.active == True %}
+    <li><h5> <a href="{% url 'listing' category.id %}" style="text-decoration: none; color: white">{{ category.title }}</a> </h5></li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+{% endblock %}

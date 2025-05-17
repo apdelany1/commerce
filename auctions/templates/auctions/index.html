@@ -1,7 +1,33 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+<h2 class="text-center display-4 text-light my-4">Active Listings</h2>
 
-    TODO
+<div class="container">
+    <div class="row">
+        {% for listing in listingData %}
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="{{ listing.listing.photo }}" class="card" style="height: 250px;">
+                    <div class="card-body d-flex flex-column">
+                        <h5>
+                            <a href="{% url 'listing' listing.listing.id %}" class="text-dark">
+                                {{ listing.listing.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text">{{ listing.listing.description }}</p>
+                        <p class="card-text"><strong>Category:</strong> {{ listing.listing.category }}</p>
+                        <p class="card-text"><strong>Posted by:</strong> {{ listing.listing.owner.username }}</p>
+                        {% if listing.highestBid %}
+                            <p class="card-text text-success">Highest Bid: ${{ listing.highestBid.amount }}</p>
+                        {% else %}
+                            <p class="card-text text-success">Price: ${{ listing.listing.price }}</p>
+                        {% endif %}
+                        <a href="{% url 'listing' listing.listing.id %}" class="btn bg-info">View Listing</a>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
 {% endblock %}

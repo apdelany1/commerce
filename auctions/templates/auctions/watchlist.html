@@ -1,0 +1,10 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1 class="text-light">{{ user }} is watching: </h1>
+    <ul>
+    {% for watch in watchList %}
+        <li class="text-light"><h5> <a href="{% url 'listing' watch.listing.id %}" style="text-decoration: none; color: white">{{ watch.listing.title }}</a> </h5></li>
+    {% endfor %}
+    </ul>
+{% endblock %}
